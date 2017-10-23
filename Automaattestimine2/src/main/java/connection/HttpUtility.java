@@ -1,3 +1,5 @@
+package connection;
+
 import java.net.HttpURLConnection;
 
 public class HttpUtility {

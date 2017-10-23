@@ -1,8 +1,13 @@
 package weatherreport;
 
 import org.json.JSONObject;
+import weatherforecast.WeatherForecast;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.TimeZone;
 ;
 
 public class CurrentWeatherReport {
@@ -35,43 +40,60 @@ public class CurrentWeatherReport {
     }
 
     public double getCurrentTemperature() {
-        return jsonData.getJSONArray("list").getJSONObject(0).getJSONObject("main").getDouble("temp");
+        return jsonData.getJSONObject("main").getDouble("temp");
     }
 
     String getMessage() {
-        return jsonData.get("message").toString();
+        return jsonData.getJSONObject("sys").get("message").toString();
     }
     public int getCloudiness() {
-        return (int) jsonData.getJSONArray("list").getJSONObject(0).getJSONObject("clouds").getDouble("all");
+        return (int) jsonData.getJSONObject("clouds").getDouble("all");
     }
     public CurrentWeatherReportOfDate getWeatherOfDate(LocalDate date) {
         return new CurrentWeatherReportOfDate(date);
     }
-    public int getSunriseTime() {
-        return -650;
+    public Date getSunriseTime() {
+        long unixSeconds = jsonData.getJSONObject("sys").getLong("sunrise");
+        return convertUnixToNormal(unixSeconds);
+
     }
-    public int getSunsetTime() {
-        return 5555;
+    private Date convertUnixToNormal(long unixTime) {
+        return Date.from(Instant.ofEpochSecond(unixTime));
+    }
+
+    public Date getSunsetTime() {
+        long unixSeconds = jsonData.getJSONObject("sys").getLong("sunset");
+        return convertUnixToNormal(unixSeconds);
     }
 
     public int getHumidity() {
-        return (int) jsonData.getJSONArray("list").getJSONObject(0).getJSONObject("main").getDouble("humidity");
-    }
-
-    public double getPercipitation() {
-        return jsonData.getJSONArray("list").getJSONObject(0).getJSONObject("rain").getDouble("3h");
+        return (int) jsonData.getJSONObject("main").getDouble("humidity");
     }
 
     public double getPressure() {
-        return jsonData.getJSONArray("list").getJSONObject(0).getJSONObject("main").getDouble("pressure");
+        return jsonData.getJSONObject("main").getDouble("pressure");
     }
     public double getWindDegrees() {
-        return jsonData.getJSONArray("list").getJSONObject(0).getJSONObject("wind").getDouble("deg");
+        return jsonData.getJSONObject("wind").getDouble("deg");
     }
     public double getWindSpeed() {
-        return jsonData.getJSONArray("list").getJSONObject(0).getJSONObject("wind").getDouble("speed");
+        return jsonData.getJSONObject("wind").getDouble("speed");
     }
-
-
-
+    public String getGeoGraphicalCoordinates() {
+        return "Lon: " + jsonData.getJSONObject("coord").getDouble("lon")
+                + "\n" + "Lat: " + jsonData.getJSONObject("coord").getDouble("lat");
+    }
+    public double getLatitude() {
+        return jsonData.getJSONObject("coord").getDouble("lat");
+    }
+    public double getLongitude() {
+        return jsonData.getJSONObject("coord").getDouble("lon");
+    }
+    public int getVisibility() {
+        return jsonData.getInt("visibility");
+    }
+    public Date getTimeOfDataCalculation() {
+        int unixTime = jsonData.getInt("dt");
+        return convertUnixToNormal(unixTime);
+    }
 }

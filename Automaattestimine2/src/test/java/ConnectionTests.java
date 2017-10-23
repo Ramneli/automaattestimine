@@ -5,9 +5,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-public class testRequestURL {
+public class ConnectionTests {
     @Test
     public void testHttpConnectionToApi() throws IOException {
         try {
@@ -23,5 +22,4 @@ public class testRequestURL {
         }
 
     }
-
 }

@@ -1,8 +1,10 @@
 package weatherreport;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ThreeDayWeatherReport {
@@ -21,42 +23,49 @@ public class ThreeDayWeatherReport {
         this.jsonData = object;
     }
 
-    List<Double> getThreeDayTemperaturesAverage() {
-        for (int i = 0; i < 24; i++) {
-            threeDayTemperaturesAverage.add(jsonData.getJSONArray("list").getJSONObject(i).getJSONObject("main").getDouble("temp"));
-        }
-        return threeDayTemperaturesAverage;
-    }
-
-    double getHighestTemperature3Days() {
-        double maxTemperature = -999;
-        for (Double threeDayTemperature : threeDayTemperaturesAverage) {
-            if (threeDayTemperature > maxTemperature) {
-                maxTemperature = threeDayTemperature;
+    public double getThreeDaysAverageTemperature() throws Exception {
+        if (validDataListSize()) {
+            double temperature = 0;
+            for (int i = 0; i < 24; i++) {
+                temperature += jsonData.getJSONArray("list").getJSONObject(i).getJSONObject("main").getDouble("temp");
             }
+            return temperature / 24;
         }
-        return maxTemperature;
+        throw new Exception();
     }
 
-    List<ArrayList> getThreeDayTemperaturesMinMax() {
-        for (int i = 0; i < 24; i++) {
-            double min = jsonData.getJSONArray("list").getJSONObject(i).getJSONObject("main").getDouble("temp_min");
-            double max = jsonData.getJSONArray("list").getJSONObject(i).getJSONObject("main").getDouble("temp_max");
-            ArrayList<Double> tempMinMax = new ArrayList<>();
-            tempMinMax.add(min);
-            tempMinMax.add(max);
-            threeDayTemperaturesMinMax.add(tempMinMax);
+    public double getHighestTemperatureOfDay(int day) throws IllegalArgumentException {
+        double maxTemperature = -999;
+        if (validDataListSize() && isValidDay(day)) {
+            for (int i = (day - 1) * 8; i < (day * 8) - 1; i++) {
+                double currentMax = jsonData.getJSONArray("list").getJSONObject(i).getJSONObject("main").getDouble("temp_max");
+                if (currentMax > maxTemperature) {
+                    maxTemperature = currentMax;
+                }
+            }
+            return maxTemperature;
         }
-        return threeDayTemperaturesMinMax;
+        throw new IllegalArgumentException();
     }
 
-    public double get3DayAverageMax() {
-        return -977;
+    private boolean isValidDay(int day) {
+        return day > 0 && day < 4;
     }
 
-    public double get3DayAverageMin() {
-        return -999;
+    public double getLowestTemperatureOfDay(int day) throws Exception {
+        double minTemperature = 999;
+        if (validDataListSize() && isValidDay(day)) {
+            for (int i = 0; i < (day * 8) - 1; i++) {
+                double currentMin = jsonData.getJSONArray("list").getJSONObject(i).getJSONObject("main").getDouble("temp_min");
+                if (currentMin < minTemperature) {
+                    minTemperature = currentMin;
+                }
+            }
+            return minTemperature;
+        }
+        throw new Exception();
     }
+
     public int getDataCount() {
         return (int) jsonData.get("cnt");
     }
@@ -70,5 +79,8 @@ public class ThreeDayWeatherReport {
 
     public String getFormat() {
         return format;
+    }
+    public boolean validDataListSize() {
+        return jsonData.getJSONArray("list").length() >= 24;
     }
 }
