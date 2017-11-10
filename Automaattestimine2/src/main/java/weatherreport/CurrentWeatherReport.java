@@ -1,20 +1,20 @@
 package weatherreport;
 
+import filewriter.Writer;
 import org.json.JSONObject;
-import weatherforecast.WeatherForecast;
 
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.TimeZone;
-;
+
 
 public class CurrentWeatherReport {
     private String cityName;
     private String countryCode;
     private String format;
     private JSONObject jsonData;
+    private Writer writer = new Writer();
 
     CurrentWeatherReport(LocalDate date) {
 
@@ -25,6 +25,11 @@ public class CurrentWeatherReport {
         this.countryCode= countryCode;
         this.format = format;
         this.jsonData = object;
+    }
+
+    public void writeToFile() throws IOException {
+        writer.writeToFile(jsonData);
+
     }
 
     public String getCityName() {
@@ -95,5 +100,9 @@ public class CurrentWeatherReport {
     public Date getTimeOfDataCalculation() {
         int unixTime = jsonData.getInt("dt");
         return convertUnixToNormal(unixTime);
+    }
+
+    public JSONObject getJsonData() {
+        return jsonData;
     }
 }

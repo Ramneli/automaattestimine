@@ -6,6 +6,7 @@ import org.junit.Test;
 import weatherforecast.WeatherForecast;
 import weatherreport.CurrentWeatherReport;
 import weatherreport.CurrentWeatherReportOfDate;
+import weatherrequest.CurrentWeatherRequest;
 import weatherrequest.WeatherRequest;
 
 import java.net.MalformedURLException;
@@ -20,7 +21,7 @@ public class CurrentWeatherTests {
     private CurrentWeatherReport currentWeatherReport;
     @Before
     public void setUp() throws MalformedURLException {
-        weatherRequest = new WeatherRequest("Tallinn", "EE", "metric");
+        weatherRequest = CurrentWeatherRequest.of("Tallinn", "EE", "metric");
         currentWeatherReport = WeatherForecast.makeCurrentWeatherReport(weatherRequest);
     }
     @After
@@ -58,8 +59,8 @@ public class CurrentWeatherTests {
     @Test
     public void testImperialValueBiggerThanMetric() {
         try {
-            WeatherRequest metric = new WeatherRequest("Tallinn", "EE", "metric");
-            WeatherRequest imperial = new WeatherRequest("Tallinn", "EE", "Imperial");
+            WeatherRequest metric = CurrentWeatherRequest.of("Tallinn", "EE", "metric");
+            WeatherRequest imperial = CurrentWeatherRequest.of("Tallinn", "EE", "Imperial");
 
             CurrentWeatherReport metricReport = WeatherForecast.makeCurrentWeatherReport(metric);
             CurrentWeatherReport imperialReport = WeatherForecast.makeCurrentWeatherReport(imperial);

@@ -1,5 +1,6 @@
 import junit.framework.TestCase;
 import org.junit.Test;
+import weatherrequest.CurrentWeatherRequest;
 import weatherrequest.WeatherRequest;
 
 import java.net.MalformedURLException;
@@ -8,7 +9,7 @@ public class SystemTests {
     @Test
     public void testRequestedNameEqualsApiName() {
         try {
-            WeatherRequest request = new WeatherRequest("Tallinn", "EE", "metric");
+            WeatherRequest request = CurrentWeatherRequest.of("Tallinn", "EE", "metric");
             TestCase.assertEquals(request.getCityName(),
                     request.getCurrentWeatherJsonData().get().getString("name"));
         } catch (MalformedURLException e) {
@@ -18,7 +19,7 @@ public class SystemTests {
     @Test
     public void testRequestedCountryCodeEqualsApiCountryCode() {
         try {
-            WeatherRequest request = new WeatherRequest("Tallinn", "EE", "metric");
+            WeatherRequest request = CurrentWeatherRequest.of("Tallinn", "EE", "metric");
             TestCase.assertEquals(request.getCountryCode(),
                     request.getCurrentWeatherJsonData().get().getJSONObject("sys").getString("country"));
         } catch (MalformedURLException e) {

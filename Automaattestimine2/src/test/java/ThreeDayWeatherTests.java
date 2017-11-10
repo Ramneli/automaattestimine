@@ -3,6 +3,7 @@ import org.junit.Before;
 import org.junit.Test;
 import weatherforecast.WeatherForecast;
 import weatherreport.ThreeDayWeatherReport;
+import weatherrequest.ThreeDayWeatherRequest;
 import weatherrequest.WeatherRequest;
 
 import java.net.MalformedURLException;
@@ -15,7 +16,7 @@ public class ThreeDayWeatherTests {
     private ThreeDayWeatherReport threeDayWeatherReport;
     @Before
     public void setUp() throws MalformedURLException {
-        weatherRequest = new WeatherRequest("Tallinn", "EE", "metric");
+        weatherRequest = ThreeDayWeatherRequest.of("Tallinn", "EE", "metric");
         threeDayWeatherReport = WeatherForecast.makeThreeDayWeatherReport(weatherRequest);
     }
     @After

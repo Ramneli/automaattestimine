@@ -1,5 +1,6 @@
 package weatherreport;
 
+import filewriter.Writer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -8,9 +9,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ThreeDayWeatherReport {
-    private ArrayList<Double> threeDayTemperaturesAverage = new ArrayList<Double>();
-    private ArrayList<ArrayList> threeDayTemperaturesMinMax = new ArrayList<ArrayList>();
+    private ArrayList<Double> threeDayTemperaturesAverage = new ArrayList<>();
+    private ArrayList<ArrayList> threeDayTemperaturesMinMax = new ArrayList<>();
 
+    private Writer writer = new Writer();
     private String cityName;
     private String countryCode;
     private String format;
@@ -65,7 +67,9 @@ public class ThreeDayWeatherReport {
         }
         throw new Exception();
     }
-
+    public void writeToFile() {
+        this.writer.writeToFile(jsonData);
+    }
     public int getDataCount() {
         return (int) jsonData.get("cnt");
     }

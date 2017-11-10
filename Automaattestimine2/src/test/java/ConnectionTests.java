@@ -20,6 +20,5 @@ public class ConnectionTests {
             e.printStackTrace();
             throw e;
         }
-
     }
 }

@@ -1,7 +1,6 @@
 package weatherrequest;
 
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,46 +10,50 @@ import java.net.URLConnection;
 import java.util.Optional;
 
 public class WeatherRequest {
-    private String cityName;
-    private String countryCode;
-    private String format;
-    private JSONObject currentWeatherRawData;
-    private JSONObject threeDayWeatherRawData;
+    private String cityName = "";
+    private String countryCode = "";
+    private String format = "";
+    JSONObject currentWeatherRawData;
+    JSONObject threeDayWeatherRawData;
+
+    public WeatherRequest() { }
 
     public WeatherRequest(String cityName, String cityCode, String format) throws MalformedURLException {
         this.cityName = cityName;
         this.countryCode = cityCode;
         this.format = format;
-        String currentWeather = makeCurrentDataUrl(cityName, cityCode, format);
-        String threeDayWeather = makeThreeDayDataUrl(cityName, cityCode, format);
-        String currentJsonData = readWeatherData(currentWeather);
-        String threeDayJsonData = readWeatherData(threeDayWeather);
-        this.currentWeatherRawData = new JSONObject(currentJsonData);
-        this.threeDayWeatherRawData = new JSONObject(threeDayJsonData);
-
+        checkForMissingValues(cityName, cityCode, format);
     }
 
-    private String makeCurrentDataUrl(String cityName, String cityCode, String format) {
+    public void checkForMissingValues(String cityName, String cityCode, String format) {
+        if (cityName.equals("") || cityCode.equals("") || format.equals("")) {
+            try {
+                ConsoleTyping.initiateTyping(this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static String makeCurrentDataUrl(String cityName, String cityCode, String format) {
         String defaultStart = "http://api.openweathermap.org/data/2.5/weather?q=";
         String API_KEY = "&APPID=f9a9920a6532b6e73fefddf1f100be12";
-        return defaultStart + "{" + cityName + "}" + "," + "{" + cityCode + "}"
-                + "&units=" + format + API_KEY;
+        return defaultStart + cityName + "," + cityCode + "&units=" + format + API_KEY;
     }
-    private String makeThreeDayDataUrl(String cityName, String cityCode, String format) {
+    public static String makeThreeDayDataUrl(String cityName, String cityCode, String format) {
         String defaultStart = "http://api.openweathermap.org/data/2.5/forecast?q=";
         String API_KEY = "&APPID=f9a9920a6532b6e73fefddf1f100be12";
-        return defaultStart + "{" + cityName + "}" + "," + "{" + cityCode + "}"
-                + "&units=" + format + API_KEY;
+        return defaultStart + cityName + "," + cityCode + "&units=" + format + API_KEY;
     }
 
     public Optional<JSONObject> getCurrentWeatherJsonData() {
-        return Optional.of(this.currentWeatherRawData);
+        return Optional.ofNullable(this.currentWeatherRawData);
     }
     public Optional<JSONObject> getThreeDayWeatherJsonData() {
-        return Optional.of(this.threeDayWeatherRawData);
+        return Optional.ofNullable(this.threeDayWeatherRawData);
     }
 
-    private String readWeatherData(String dataUrl) throws MalformedURLException {
+    public static String readWeatherData(String mode, String dataUrl, String cityName, String countryCode, String format) throws MalformedURLException {
         StringBuilder content = new StringBuilder();
 
         try {
@@ -65,7 +68,8 @@ public class WeatherRequest {
             }
             bufferedReader.close();
         } catch(IOException e) {
-            e.printStackTrace();
+            System.out.println(mode + " weather data could not be read for " + cityName + ", " + countryCode + ", "
+            + format);
         }
         return content.toString();
     }
@@ -80,5 +84,17 @@ public class WeatherRequest {
 
     public String getCountryCode() {
         return countryCode;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
     }
 }

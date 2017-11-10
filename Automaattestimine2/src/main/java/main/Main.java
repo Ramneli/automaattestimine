@@ -3,18 +3,17 @@ package main;
 import weatherforecast.WeatherForecast;
 import weatherreport.CurrentWeatherReport;
 import weatherreport.ThreeDayWeatherReport;
+import weatherrequest.CurrentWeatherRequest;
+import weatherrequest.ThreeDayWeatherRequest;
 import weatherrequest.WeatherRequest;
 
-import java.net.MalformedURLException;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        WeatherRequest weatherRequest = new WeatherRequest("Tallinn", "EE", "metric");
-        CurrentWeatherReport currentWeatherForecast = WeatherForecast.makeCurrentWeatherReport(weatherRequest);
-        ThreeDayWeatherReport threeDayWeatherForecast = WeatherForecast.makeThreeDayWeatherReport(weatherRequest);
-        //System.out.println(currentWeatherForecast.getTimeOfDataCalculation());
-        System.out.println(currentWeatherForecast.getSunsetTime());
-        System.out.println(currentWeatherForecast.getSunriseTime());
-        System.out.println(currentWeatherForecast.getTimeOfDataCalculation());
+        WeatherRequest weatherRequest = ThreeDayWeatherRequest.of("Tallinn", "EE", "metric");
+        ThreeDayWeatherReport threeDayWeatherReport = WeatherForecast.makeThreeDayWeatherReport(weatherRequest);
+        System.out.println(threeDayWeatherReport.getHighestTemperatureOfDay(3));
+        //currentWeatherReport.writeToFile();
     }
 }
