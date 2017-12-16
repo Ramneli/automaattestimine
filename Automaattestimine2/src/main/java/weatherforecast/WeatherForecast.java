@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 
 public class WeatherForecast {
 
-    public static CurrentWeatherReport makeCurrentWeatherReport(WeatherRequest weatherRequestData) {
+    public CurrentWeatherReport makeCurrentWeatherReport(WeatherRequest weatherRequestData) {
         try {
             return new CurrentWeatherReport(weatherRequestData.getCityName(), weatherRequestData.getCountryCode()
                     , weatherRequestData.getFormat(), weatherRequestData.getCurrentWeatherJsonData().get());
@@ -19,7 +19,7 @@ public class WeatherForecast {
         throw new NoSuchElementException();
     }
 
-    public static ThreeDayWeatherReport makeThreeDayWeatherReport(WeatherRequest weatherRequestData) {
+    public ThreeDayWeatherReport makeThreeDayWeatherReport(WeatherRequest weatherRequestData) {
         try {
             return new ThreeDayWeatherReport(weatherRequestData.getCityName(), weatherRequestData.getCountryCode()
                     , weatherRequestData.getFormat(), weatherRequestData.getThreeDayWeatherJsonData().get());

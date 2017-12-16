@@ -1,18 +1,10 @@
 package weatherreport;
 
-import filewriter.Writer;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ThreeDayWeatherReport {
-    private ArrayList<Double> threeDayTemperaturesAverage = new ArrayList<>();
-    private ArrayList<ArrayList> threeDayTemperaturesMinMax = new ArrayList<>();
 
-    private Writer writer = new Writer();
     private String cityName;
     private String countryCode;
     private String format;
@@ -54,7 +46,7 @@ public class ThreeDayWeatherReport {
         return day > 0 && day < 4;
     }
 
-    public double getLowestTemperatureOfDay(int day) throws Exception {
+    public double getLowestTemperatureOfDay(int day) throws IllegalArgumentException {
         double minTemperature = 999;
         if (validDataListSize() && isValidDay(day)) {
             for (int i = 0; i < (day * 8) - 1; i++) {
@@ -65,20 +57,19 @@ public class ThreeDayWeatherReport {
             }
             return minTemperature;
         }
-        throw new Exception();
+        throw new IllegalArgumentException();
     }
-    public void writeToFile() {
-        this.writer.writeToFile(jsonData);
-    }
+
     public int getDataCount() {
         return (int) jsonData.get("cnt");
     }
+
     public String getCityName() {
-        return cityName;
+        return jsonData.getJSONObject("city").getString("name");
     }
 
-    String getCountryCode() {
-        return countryCode;
+    public String getCountryCode() {
+        return jsonData.getJSONObject("city").getString("country");
     }
 
     public String getFormat() {

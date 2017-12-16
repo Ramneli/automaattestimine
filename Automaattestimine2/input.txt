@@ -1,1 +1,1 @@
-Tallinn;EE;metric
+Tallinn,EE,metric;Moscow,RU,metric;Helsinki,FI,metric;Paris,FR,imperial;Stockholm,SE,imperial

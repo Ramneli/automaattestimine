@@ -1,3 +1,4 @@
+import filereader.Reader;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Assert;
@@ -5,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import weatherforecast.WeatherForecast;
 import weatherreport.CurrentWeatherReport;
-import weatherreport.CurrentWeatherReportOfDate;
 import weatherrequest.CurrentWeatherRequest;
 import weatherrequest.WeatherRequest;
 
@@ -19,13 +19,20 @@ import static org.junit.Assert.fail;
 public class CurrentWeatherTests {
     private WeatherRequest weatherRequest;
     private CurrentWeatherReport currentWeatherReport;
+    private CurrentWeatherRequest currentWeatherRequest = new CurrentWeatherRequest();
+    private WeatherForecast weatherForecast;
+    private Reader reader;
+
     @Before
     public void setUp() throws MalformedURLException {
-        weatherRequest = CurrentWeatherRequest.of("Tallinn", "EE", "metric");
-        currentWeatherReport = WeatherForecast.makeCurrentWeatherReport(weatherRequest);
+        weatherForecast = new WeatherForecast();
+        reader = new Reader();
+        weatherRequest = currentWeatherRequest.of("Tallinn", "EE", "metric", reader);
+        currentWeatherReport = weatherForecast.makeCurrentWeatherReport(weatherRequest);
     }
     @After
     public void tearDown() {
+        reader = null;
         weatherRequest = null;
         currentWeatherReport = null;
     }
@@ -59,12 +66,11 @@ public class CurrentWeatherTests {
     @Test
     public void testImperialValueBiggerThanMetric() {
         try {
-            WeatherRequest metric = CurrentWeatherRequest.of("Tallinn", "EE", "metric");
-            WeatherRequest imperial = CurrentWeatherRequest.of("Tallinn", "EE", "Imperial");
-
-            CurrentWeatherReport metricReport = WeatherForecast.makeCurrentWeatherReport(metric);
-            CurrentWeatherReport imperialReport = WeatherForecast.makeCurrentWeatherReport(imperial);
-
+            Reader reader1 = new Reader();
+            WeatherRequest metric = currentWeatherRequest.of("Tallinn", "EE", "metric", reader);
+            WeatherRequest imperial = currentWeatherRequest.of("Tallinn", "EE", "imperial", reader1);
+            CurrentWeatherReport metricReport = weatherForecast.makeCurrentWeatherReport(metric);
+            CurrentWeatherReport imperialReport = weatherForecast.makeCurrentWeatherReport(imperial);
             TestCase.assertTrue(imperialReport.getCurrentTemperature() > metricReport.getCurrentTemperature());
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -80,13 +86,23 @@ public class CurrentWeatherTests {
     public void testCloudinessValue() {
         assertTrue(currentWeatherReport.getCloudiness() >= 0 && currentWeatherReport.getCloudiness() <= 100);
     }
-    @Test
-    public void testGetForecastForDate() {
-        assertTrue(currentWeatherReport.getWeatherOfDate(LocalDate.of(2017, 10, 12))
-                instanceof CurrentWeatherReportOfDate);
-    }
+
     @Test
     public void testVisibilityValues() throws MalformedURLException {
         assertTrue(currentWeatherReport.getVisibility() >= 0 && currentWeatherReport.getVisibility() <= 25000);
+    }
+    @Test
+    public void testEarliestSunriseEstonia() throws MalformedURLException {
+        WeatherRequest weatherRequest = currentWeatherRequest.of("Tallinn", "EE", "metric", reader);
+        CurrentWeatherReport currentWeatherReport = weatherForecast.makeCurrentWeatherReport(weatherRequest);
+        assertTrue(currentWeatherReport.getSunriseTime().getHours() >= 4
+                && currentWeatherReport.getSunriseTime().getHours() <= 9);
+    }
+    @Test
+    public void testLatestSunSetEstonia() throws MalformedURLException {
+        WeatherRequest weatherRequest = currentWeatherRequest.of("Tallinn", "EE", "metric", reader);
+        CurrentWeatherReport currentWeatherReport = weatherForecast.makeCurrentWeatherReport(weatherRequest);
+        assertTrue(currentWeatherReport.getSunsetTime().getHours() <= 23
+                && currentWeatherReport.getSunsetTime().getHours() >= 15);
     }
 }

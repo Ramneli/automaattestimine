@@ -1,11 +1,7 @@
 package weatherreport;
 
-import filewriter.Writer;
 import org.json.JSONObject;
-
-import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -14,11 +10,6 @@ public class CurrentWeatherReport {
     private String countryCode;
     private String format;
     private JSONObject jsonData;
-    private Writer writer = new Writer();
-
-    CurrentWeatherReport(LocalDate date) {
-
-    }
 
     public CurrentWeatherReport(String cityName, String countryCode, String format, JSONObject object) {
         this.cityName = cityName;
@@ -27,17 +18,12 @@ public class CurrentWeatherReport {
         this.jsonData = object;
     }
 
-    public void writeToFile() throws IOException {
-        writer.writeToFile(jsonData);
-
-    }
-
     public String getCityName() {
-        return cityName;
+        return jsonData.getString("name");
     }
 
-    String getCountryCode() {
-        return countryCode;
+    public String getCountryCode() {
+        return jsonData.getJSONObject("sys").getString("country");
     }
 
     public String getFormat() {
@@ -54,9 +40,7 @@ public class CurrentWeatherReport {
     public int getCloudiness() {
         return (int) jsonData.getJSONObject("clouds").getDouble("all");
     }
-    public CurrentWeatherReportOfDate getWeatherOfDate(LocalDate date) {
-        return new CurrentWeatherReportOfDate(date);
-    }
+
     public Date getSunriseTime() {
         long unixSeconds = jsonData.getJSONObject("sys").getLong("sunrise");
         return convertUnixToNormal(unixSeconds);
@@ -86,7 +70,7 @@ public class CurrentWeatherReport {
     }
     public String getGeoGraphicalCoordinates() {
         return "Lon: " + jsonData.getJSONObject("coord").getDouble("lon")
-                + "\n" + "Lat: " + jsonData.getJSONObject("coord").getDouble("lat");
+                + "  " + "Lat: " + jsonData.getJSONObject("coord").getDouble("lat");
     }
     public double getLatitude() {
         return jsonData.getJSONObject("coord").getDouble("lat");

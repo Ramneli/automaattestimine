@@ -1,22 +1,29 @@
 package weatherrequest;
 
+import filereader.Reader;
+import filewriter.Writer;
 import org.json.JSONObject;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class WeatherRequest {
     private String cityName = "";
     private String countryCode = "";
     private String format = "";
+    Reader reader;
+    Writer writer;
     JSONObject currentWeatherRawData;
     JSONObject threeDayWeatherRawData;
 
-    public WeatherRequest() { }
+    public WeatherRequest() {}
+
+    public void ofFile(String fileURL, Reader reader, Writer writer) {
+        this.reader = reader;
+        this.writer = writer;
+        writer.readAndWrite(reader, fileURL);
+    }
 
     public WeatherRequest(String cityName, String cityCode, String format) throws MalformedURLException {
         this.cityName = cityName;
@@ -35,15 +42,21 @@ public class WeatherRequest {
         }
     }
 
-    public static String makeCurrentDataUrl(String cityName, String cityCode, String format) {
+    public static String makeCurrentDataUrl(ArrayList<ArrayList> nestedData) {
+        String cityName = (String) nestedData.get(0).get(0);
+        String countryCode = (String) nestedData.get(0).get(1);
+        String units = (String) nestedData.get(0).get(2);
         String defaultStart = "http://api.openweathermap.org/data/2.5/weather?q=";
         String API_KEY = "&APPID=f9a9920a6532b6e73fefddf1f100be12";
-        return defaultStart + cityName + "," + cityCode + "&units=" + format + API_KEY;
+        return defaultStart + cityName + "," + countryCode + "&units=" + units + API_KEY;
     }
-    public static String makeThreeDayDataUrl(String cityName, String cityCode, String format) {
+    public static String makeThreeDayDataUrl(ArrayList<ArrayList> nestedData) {
+        String cityName = (String) nestedData.get(0).get(0);
+        String countryCode = (String) nestedData.get(0).get(1);
+        String units = (String) nestedData.get(0).get(2);
         String defaultStart = "http://api.openweathermap.org/data/2.5/forecast?q=";
         String API_KEY = "&APPID=f9a9920a6532b6e73fefddf1f100be12";
-        return defaultStart + cityName + "," + cityCode + "&units=" + format + API_KEY;
+        return defaultStart + cityName + "," + countryCode + "&units=" + units + API_KEY;
     }
 
     public Optional<JSONObject> getCurrentWeatherJsonData() {
@@ -53,25 +66,8 @@ public class WeatherRequest {
         return Optional.ofNullable(this.threeDayWeatherRawData);
     }
 
-    public static String readWeatherData(String mode, String dataUrl, String cityName, String countryCode, String format) throws MalformedURLException {
-        StringBuilder content = new StringBuilder();
-
-        try {
-            URL url = new URL(dataUrl);
-            URLConnection urlConnection = url.openConnection();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-            bufferedReader.close();
-        } catch(IOException e) {
-            System.out.println(mode + " weather data could not be read for " + cityName + ", " + countryCode + ", "
-            + format);
-        }
-        return content.toString();
+    public String readWeatherData(String mode, String dataUrl, ArrayList<ArrayList> nestedData, Reader reader) throws MalformedURLException {
+        return reader.readWeatherData(mode, dataUrl, nestedData);
     }
 
     public String getCityName() {
@@ -96,5 +92,13 @@ public class WeatherRequest {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public void setCurrentWeatherData(JSONObject currentWeatherData) {
+        this.currentWeatherRawData = currentWeatherData;
+    }
+
+    public void setThreeDayWeatherRawData(JSONObject threeDayWeatherRawData) {
+        this.threeDayWeatherRawData = threeDayWeatherRawData;
     }
 }

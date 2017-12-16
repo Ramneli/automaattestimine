@@ -1,22 +1,22 @@
 package weatherrequest;
 
+import filereader.Reader;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 public class ThreeDayWeatherRequest extends WeatherRequest {
 
-    public static final String THREE_DAY = "3 day";
-
-    public static WeatherRequest of(String cityName, String countryCode, String format) throws MalformedURLException {
+    public WeatherRequest of(String cityName, String countryCode, String format, Reader reader) throws MalformedURLException {
         WeatherRequest weatherRequest = new WeatherRequest(cityName, countryCode, format);
-        String threeDayWeather = makeThreeDayDataUrl(weatherRequest.getCityName(), weatherRequest.getCountryCode(),
-                weatherRequest.getFormat());
-        String threeDayJsonData = readWeatherData(THREE_DAY, threeDayWeather, weatherRequest.getCityName(), weatherRequest.getCountryCode(),
-                weatherRequest.getFormat());
+        String[] data = {weatherRequest.getCityName()+","+weatherRequest.getCountryCode()+","+weatherRequest.getFormat()};
+        ArrayList<ArrayList> nestedData =  reader.makeNestedData(data);
+        String threeDayWeather = makeThreeDayDataUrl(nestedData);
+        String threeDayJsonData = readWeatherData("3 day", threeDayWeather, nestedData, reader);
         try {
-            weatherRequest.threeDayWeatherRawData = new JSONObject(threeDayJsonData);
+            weatherRequest.setThreeDayWeatherRawData(new JSONObject(threeDayJsonData));
         } catch (JSONException e) {
             System.out.println("JSON could not have been created.");
         }

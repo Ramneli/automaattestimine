@@ -1,3 +1,4 @@
+import filereader.Reader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +15,18 @@ import static junit.framework.TestCase.assertTrue;
 public class ThreeDayWeatherTests {
     private WeatherRequest weatherRequest;
     private ThreeDayWeatherReport threeDayWeatherReport;
+    private ThreeDayWeatherRequest threeDayWeatherRequest = new ThreeDayWeatherRequest();
+    private WeatherForecast weatherForecast = new WeatherForecast();
+    private Reader reader;
     @Before
     public void setUp() throws MalformedURLException {
-        weatherRequest = ThreeDayWeatherRequest.of("Tallinn", "EE", "metric");
-        threeDayWeatherReport = WeatherForecast.makeThreeDayWeatherReport(weatherRequest);
+        reader = new Reader();
+        weatherRequest = threeDayWeatherRequest.of("Tallinn", "EE", "metric", reader);
+        threeDayWeatherReport = weatherForecast.makeThreeDayWeatherReport(weatherRequest);
     }
     @After
     public void tearDown() {
+        reader = null;
         weatherRequest = null;
         threeDayWeatherReport = null;
     }
