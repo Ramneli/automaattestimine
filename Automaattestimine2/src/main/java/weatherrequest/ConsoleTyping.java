@@ -2,8 +2,9 @@ package weatherrequest;
 
 import java.io.*;
 
-class ConsoleTyping {
-    static void initiateTyping(WeatherRequest weatherRequest) throws IOException {
+public class ConsoleTyping {
+
+    void initiateTyping(WeatherRequest weatherRequest) throws IOException {
         String cityName = "";
         String cityCode = "";
         String code = "";
@@ -40,15 +41,15 @@ class ConsoleTyping {
         }
     }
 
-    private static boolean notValidUnitSystem(String code) {
+    public static boolean notValidUnitSystem(String code) {
         return !code.equalsIgnoreCase("metric") && !code.equalsIgnoreCase("imperial");
     }
 
-    private static boolean notValidCityCode(String cityCode) {
+    public static boolean notValidCityCode(String cityCode) {
         return cityCode.matches(".*\\d+.*") || cityCode.length() != 2;
     }
 
-    private static boolean notValidCityName(String cityName) {
+    public static boolean notValidCityName(String cityName) {
         return cityName.equals("") || cityName.isEmpty() || cityName.matches(".*\\d+.*");
     }
 }

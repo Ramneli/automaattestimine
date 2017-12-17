@@ -12,10 +12,11 @@ public class WeatherRequest {
     private String cityName = "";
     private String countryCode = "";
     private String format = "";
-    Reader reader;
-    Writer writer;
-    JSONObject currentWeatherRawData;
-    JSONObject threeDayWeatherRawData;
+    private Reader reader;
+    private Writer writer;
+    private JSONObject currentWeatherRawData;
+    private JSONObject threeDayWeatherRawData;
+    private ConsoleTyping consoleTyping = new ConsoleTyping();
 
     public WeatherRequest() {}
 
@@ -32,17 +33,17 @@ public class WeatherRequest {
         checkForMissingValues(cityName, cityCode, format);
     }
 
-    public void checkForMissingValues(String cityName, String cityCode, String format) {
+    private void checkForMissingValues(String cityName, String cityCode, String format) {
         if (cityName.equals("") || cityCode.equals("") || format.equals("")) {
             try {
-                ConsoleTyping.initiateTyping(this);
+                consoleTyping.initiateTyping(this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static String makeCurrentDataUrl(ArrayList<ArrayList> nestedData) {
+    public String makeCurrentDataUrl(ArrayList<ArrayList> nestedData) {
         String cityName = (String) nestedData.get(0).get(0);
         String countryCode = (String) nestedData.get(0).get(1);
         String units = (String) nestedData.get(0).get(2);
@@ -50,7 +51,7 @@ public class WeatherRequest {
         String API_KEY = "&APPID=f9a9920a6532b6e73fefddf1f100be12";
         return defaultStart + cityName + "," + countryCode + "&units=" + units + API_KEY;
     }
-    public static String makeThreeDayDataUrl(ArrayList<ArrayList> nestedData) {
+    public String makeThreeDayDataUrl(ArrayList<ArrayList> nestedData) {
         String cityName = (String) nestedData.get(0).get(0);
         String countryCode = (String) nestedData.get(0).get(1);
         String units = (String) nestedData.get(0).get(2);
@@ -66,7 +67,7 @@ public class WeatherRequest {
         return Optional.ofNullable(this.threeDayWeatherRawData);
     }
 
-    public String readWeatherData(String mode, String dataUrl, ArrayList<ArrayList> nestedData, Reader reader) throws MalformedURLException {
+    String readWeatherData(String mode, String dataUrl, ArrayList<ArrayList> nestedData, Reader reader) throws MalformedURLException {
         return reader.readWeatherData(mode, dataUrl, nestedData);
     }
 
@@ -94,11 +95,11 @@ public class WeatherRequest {
         this.format = format;
     }
 
-    public void setCurrentWeatherData(JSONObject currentWeatherData) {
+    void setCurrentWeatherData(JSONObject currentWeatherData) {
         this.currentWeatherRawData = currentWeatherData;
     }
 
-    public void setThreeDayWeatherRawData(JSONObject threeDayWeatherRawData) {
+    void setThreeDayWeatherRawData(JSONObject threeDayWeatherRawData) {
         this.threeDayWeatherRawData = threeDayWeatherRawData;
     }
 }

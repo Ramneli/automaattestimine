@@ -12,7 +12,7 @@ import weatherrequest.WeatherRequest;
 
 import java.net.MalformedURLException;
 
-public class SystemTests {
+public class InOutTests {
     private WeatherRequest weatherRequest;
     private CurrentWeatherRequest currentWeatherRequest;
     private WeatherForecast weatherForecast;
@@ -35,91 +35,61 @@ public class SystemTests {
     }
 
     @Test
-    public void testCurrentWeatherRequestCityNameEqualsApiName() {
-        try {
+    public void testCurrentWeatherRequestCityNameEqualsApiName() throws MalformedURLException {
             weatherRequest = currentWeatherRequest.of("Tallinn", "EE", "metric", reader);
             CurrentWeatherReport currentWeatherReport = weatherForecast.makeCurrentWeatherReport(weatherRequest);
             TestCase.assertEquals(weatherRequest.getCityName(), currentWeatherReport.getCityName());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
     @Test
-    public void testCurrentWeatherRequestCityCountryCodeEqualsApiCountryCode() {
-        try {
+    public void testCurrentWeatherRequestCityCountryCodeEqualsApiCountryCode() throws MalformedURLException {
             weatherRequest = currentWeatherRequest.of("Tallinn", "EE", "metric", reader);
             CurrentWeatherReport currentWeatherReport = weatherForecast.makeCurrentWeatherReport(weatherRequest);
             TestCase.assertEquals(weatherRequest.getCountryCode(), currentWeatherReport.getCountryCode());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
-    public void testThreeDayWeatherRequestCityNameEqualsApiName() {
-        try {
+    public void testThreeDayWeatherRequestCityNameEqualsApiName() throws MalformedURLException {
             weatherRequest = threeDayWeatherRequest.of("Tallinn", "EE", "metric", reader);
             ThreeDayWeatherReport threeDayWeatherReport = weatherForecast.makeThreeDayWeatherReport(weatherRequest);
             TestCase.assertEquals(weatherRequest.getCityName(), threeDayWeatherReport.getCityName());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
     @Test
-    public void testThreeDayRequestCityCountryCodeEqualsApiCountryCode() {
-        try {
+    public void testThreeDayRequestCityCountryCodeEqualsApiCountryCode() throws MalformedURLException {
             weatherRequest = threeDayWeatherRequest.of("Tallinn", "EE", "metric", reader);
             ThreeDayWeatherReport threeDayWeatherReport = weatherForecast.makeThreeDayWeatherReport(weatherRequest);
             TestCase.assertEquals(weatherRequest.getCountryCode(), threeDayWeatherReport.getCountryCode());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
     @Test
-    public void testCurrentWeatherMetricFormat() {
-        try {
+    public void testCurrentWeatherMetricFormat() throws MalformedURLException {
             weatherRequest = currentWeatherRequest.of("Tallinn", "EE", "metric", reader);
             CurrentWeatherReport currentWeatherReport = weatherForecast.makeCurrentWeatherReport(weatherRequest);
             TestCase.assertTrue(currentWeatherReport.getCurrentTemperature() < 60
                     && currentWeatherReport.getCurrentTemperature() > -60);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
-    public void testCurrentWeatherImperialFormat() {
-        try {
+    public void testCurrentWeatherImperialFormat() throws MalformedURLException {
             weatherRequest = currentWeatherRequest.of("Tallinn", "EE", "imperial", reader);
             CurrentWeatherReport currentWeatherReport = weatherForecast.makeCurrentWeatherReport(weatherRequest);
             TestCase.assertTrue(currentWeatherReport.getCurrentTemperature() < 140
                     && currentWeatherReport.getCurrentTemperature() > -76);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     public void testThreeDayWeatherMetricFormat() throws Exception {
-        try {
             weatherRequest = threeDayWeatherRequest.of("Tallinn", "EE", "metric", reader);
             ThreeDayWeatherReport threeDayWeatherReport = weatherForecast.makeThreeDayWeatherReport(weatherRequest);
             TestCase.assertTrue(threeDayWeatherReport.getThreeDaysAverageTemperature() < 60
                     && threeDayWeatherReport.getThreeDaysAverageTemperature() > -60);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Test
     public void testThreeDayWeatherImperialFormat() throws Exception {
-        try {
             weatherRequest = threeDayWeatherRequest.of("Tallinn", "EE", "imperial", reader);
             ThreeDayWeatherReport threeDayWeatherReport = weatherForecast.makeThreeDayWeatherReport(weatherRequest);
             TestCase.assertTrue(threeDayWeatherReport.getThreeDaysAverageTemperature() < 140
                     && threeDayWeatherReport.getThreeDaysAverageTemperature() > -76);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+
     }
 }

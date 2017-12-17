@@ -30,7 +30,7 @@ public class ThreeDayWeatherReport {
 
     public double getHighestTemperatureOfDay(int day) throws IllegalArgumentException {
         double maxTemperature = -999;
-        if (validDataListSize() && isValidDay(day)) {
+        if (isValidDay(day) && validDataListSize()) {
             for (int i = (day - 1) * 8; i < (day * 8) - 1; i++) {
                 double currentMax = jsonData.getJSONArray("list").getJSONObject(i).getJSONObject("main").getDouble("temp_max");
                 if (currentMax > maxTemperature) {
@@ -48,7 +48,7 @@ public class ThreeDayWeatherReport {
 
     public double getLowestTemperatureOfDay(int day) throws IllegalArgumentException {
         double minTemperature = 999;
-        if (validDataListSize() && isValidDay(day)) {
+        if (isValidDay(day) && validDataListSize()) {
             for (int i = 0; i < (day * 8) - 1; i++) {
                 double currentMin = jsonData.getJSONArray("list").getJSONObject(i).getJSONObject("main").getDouble("temp_min");
                 if (currentMin < minTemperature) {

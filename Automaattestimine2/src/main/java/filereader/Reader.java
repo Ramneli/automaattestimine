@@ -55,4 +55,8 @@ public class Reader {
         }
         return content.toString();
     }
+
+    public ArrayList<ArrayList> getAllCitiesData() {
+        return allCitiesData;
+    }
 }

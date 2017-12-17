@@ -20,7 +20,7 @@ import java.util.Arrays;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class CurrentWeatherMocking {
+public class MockingTests {
     private WeatherRequest weatherRequest = new WeatherRequest();
     private ArrayList<ArrayList> cities;
     private ArrayList<String> oneCity;
@@ -44,9 +44,9 @@ public class CurrentWeatherMocking {
 
         when(reader.read(Mockito.anyString())).thenReturn(cities);
         when(reader.makeNestedData((String[]) Mockito.any())).thenReturn(cities);
-        when(reader.readWeatherData(Mockito.anyString(), Mockito.anyString(), (ArrayList<ArrayList>) Mockito.any())).thenReturn("{}");
+        when(reader.readWeatherData(Mockito.anyString(), Mockito.anyString(), (ArrayList<ArrayList>) Mockito.any()))
+                .thenReturn("{}");
         doNothing().when(writer).writeToFile((CurrentWeatherReport) Mockito.any());
-
         weatherRequest.ofFile("tere.txt", reader, writer);
     }
 
@@ -67,6 +67,6 @@ public class CurrentWeatherMocking {
 
         weatherRequest = currentWeatherRequest.of("Paris", "FR", "metric", reader);
         CurrentWeatherReport weatherReport = weatherForecast.makeCurrentWeatherReport(weatherRequest);
-        //System.out.println(weatherReport.getCurrentTemperature());
+        TestCase.assertEquals(999.99, weatherReport.getCurrentTemperature());
     }
 }

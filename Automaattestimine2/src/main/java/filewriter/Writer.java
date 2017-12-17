@@ -50,7 +50,7 @@ public class Writer {
         WeatherForecast weatherForecast = new WeatherForecast();
         List<CurrentWeatherReport> currentWeatherReports = new ArrayList<>();
         List<ThreeDayWeatherReport> threeDayWeatherReports = new ArrayList<>();
-        System.out.println(allCities);
+
         for (int j = 0; j < allCities.size(); j++) {
             String city = (String) allCities.get(j).get(0);
             String code = (String) allCities.get(j).get(1);
@@ -63,7 +63,6 @@ public class Writer {
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-            System.out.println(allCities);
         }
 
         for (int i = 0; i < currentWeatherReports.size(); i++) {
