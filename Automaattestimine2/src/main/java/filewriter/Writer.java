@@ -20,6 +20,7 @@ public class Writer {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(cityName+".txt")));
             bufferedWriter.write("City name: " + cityName + "\n"
             + "City coordinates: " + currentWeatherReport.getGeoGraphicalCoordinates() + "\n"
+            + "Unit system: " + currentWeatherReport.getFormat() + "\n"
             + "Current temperature: " + currentWeatherReport.getCurrentTemperature() + "\n");
             bufferedWriter.flush();
         } catch (IOException e) {

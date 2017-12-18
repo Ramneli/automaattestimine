@@ -32,7 +32,7 @@ public class ThreeDayWeatherTests {
     }
     @Test
     public void testThreeDaysValidForeCastDataAmount() throws MalformedURLException {
-        assertEquals(40, threeDayWeatherReport.getDataCount());
+        assertTrue(threeDayWeatherReport.getDataCount() >= 24);
     }
     @Test
     public void test3DayMaxTempHigherMin() throws Exception {
